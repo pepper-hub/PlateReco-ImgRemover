@@ -16,8 +16,7 @@ RUN npm run build
 
 # 4. 暴露端口 (serve 默认可以用 3000，我们指定用 80)
 EXPOSE 80
-ports:
-  - "3000:80"
+
 
 # 5. 启动命令：用 serve 运行 dist 目录，端口 80
 CMD ["serve", "-s", "dist", "-l", "80"]
