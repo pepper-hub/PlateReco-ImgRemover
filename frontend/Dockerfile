@@ -1,29 +1,23 @@
-# 前端 Dockerfile
-FROM node:20-alpine AS builder
+# 使用轻量级 Node 镜像
+FROM node:20-alpine
 
 WORKDIR /app
 
-# 复制 package 文件
-COPY package*.json ./
+# 1. 安装一个超小的静态文件服务器 "serve"
+RUN npm install -g serve
 
-# 安装依赖
+# 2. 复制依赖并安装
+COPY package*.json ./
 RUN npm install
 
-# 复制源代码
+# 3. 复制源码并打包
 COPY . .
-
-# 构建
 RUN npm run build
 
-# 生产阶段
-FROM nginx:alpine
-
-# 复制构建产物
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# 复制 nginx 配置
-RUN echo 'server { listen 80; location / { root /usr/share/nginx/html; try_files $uri $uri/ /index.html; } }' > /etc/nginx/conf.d/default.conf
-
+# 4. 暴露端口 (serve 默认可以用 3000，我们指定用 80)
 EXPOSE 80
+ports:
+  - "3000:80"
 
-CMD ["nginx", "-g", "daemon off;"]
+# 5. 启动命令：用 serve 运行 dist 目录，端口 80
+CMD ["serve", "-s", "dist", "-l", "80"]
