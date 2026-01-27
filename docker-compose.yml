@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # 后端服务 - imgcleaner
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: imgcleaner-backend
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./yolov8s.pt:/app/yolov8s.pt:ro
+    restart: unless-stopped
+
+  # 后端服务 - iopaint
+  iopaint:
+    image: sanster/iopaint:latest
+    container_name: imgcleaner-iopaint
+    ports:
+      - "8003:8003"
+    command: start --port 8003
+    restart: unless-stopped
+
+  # 前端服务
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: imgcleaner-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
