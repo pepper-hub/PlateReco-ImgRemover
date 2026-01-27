@@ -12,12 +12,19 @@ services:
     restart: unless-stopped
 
   # 后端服务 - iopaint
+  # 2. IOPaint 后端 (复杂消除)
   iopaint:
     image: sanster/iopaint:latest
     container_name: imgcleaner-iopaint
+    # 【关键配置】: 告诉 Docker 只用本地镜像，千万别去网上拉
+    pull_policy: never  
     ports:
       - "8003:8003"
     command: start --port 8003
+    volumes:
+      # 【强烈建议】: 挂载缓存目录！
+      # 否则每次重启它都会重新下载 2GB+ 的模型，且服务器网络大概率下载失败
+      - ./cache_iopaint:/root/.cache
     restart: unless-stopped
 
   # 前端服务
