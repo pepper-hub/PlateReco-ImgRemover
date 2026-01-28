@@ -14,7 +14,7 @@ services:
   # 后端服务 - iopaint
   # 2. IOPaint 后端 (复杂消除)
   iopaint:
-    image: ghcr.io/iopaint/iopaint:latest
+    image: ghcr.io/iopaint/iopaint:cpu
     container_name: imgcleaner-iopaint
     ports:
       - "8003:8003"
