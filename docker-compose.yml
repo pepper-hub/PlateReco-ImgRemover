@@ -16,8 +16,6 @@ services:
   iopaint:
     image: sanster/iopaint:latest
     container_name: imgcleaner-iopaint
-    # 【关键配置】: 告诉 Docker 只用本地镜像，千万别去网上拉
-    pull_policy: never  
     ports:
       - "8003:8003"
     command: start --port 8003
